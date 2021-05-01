@@ -1,0 +1,15 @@
+{
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": true,
+    "[json]": {
+        "editor.tabSize": 4,
+    },
+    "[javascript]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "eslint.validate": [
+    "javascript",
+    "javascriptreact"
+    ]
+}
