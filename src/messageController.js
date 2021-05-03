@@ -1,16 +1,4 @@
-import { lineClient } from './config.js'
-
-const DUST_REGEXP = /ゴミ|ごみ|/
-const schedule = [
-  { wd: '日', dustItem: '' },
-  { wd: '月', dustItem: 'ミックスペーパー' },
-  { wd: '火', dustItem: 'プラスチック' },
-  { wd: '水', dustItem: '普通ごみ' },
-  { wd: '木', dustItem: '' },
-  { wd: '金', dustItem: 'ビン/かん・PET・電池' },
-  { wd: '土', dustItem: '普通ごみ' },
-]
-const weekdays = ['日', '月', '火', '水', '木', '金', '土']
+import { lineClient, DUST_REGEXP, DUST_SCHEDULE, WEEKDAY_LIST } from './config.js'
 
 class MessageController {
   //
@@ -25,29 +13,35 @@ class MessageController {
   }
 
   async getResponse(event) {
-    let response
+    let response = { type: 'text', text: '申し訳ございません。入力内容に誤りがあります。' }
     // text
     if (event.message.type === 'text') {
-      const getText = event.message.text
-      const text = getText.match(DUST_REGEXP) ? await this.getDuxtInfo() : '申し訳ございません。'
-      response = { type: 'text', text }
+      const text = event.message.text
+      if (text.match(DUST_REGEXP)) response.text = await this.getDuxtInfo()
     }
     return response
   }
 
-  // ゴミの収集日
   async getDuxtInfo() {
     let textList = await Promise.all(
+      // 7日分取得
       [...Array(7)].map(async (_, n) => {
-        const { date, month, day, wdIndex } = await this.getDate(n)
-        const { nth, wd } = await this.getWeekDay(date)
-        console.log(nth)
+        const { date, month, day } = await this.getDate(n)
+        let { nth, wd } = await this.getWeekday(date)
         // 第1,3火曜日の場合
-        if (nth.match(/1|3/) && wd === '火') return `${month}/${day}(${nth}${schedule[wdIndex].wd})：小物金属・粗大ごみ`
-        return `${month}/${day}(${schedule[wdIndex].wd})：${schedule[wdIndex].dustItem}`
+        wd = nth.match(/1|3/) && wd === '火' ? nth + wd : wd
+        const dustItem = await this.getDustItem(wd)
+        return `${month}/${day}(${wd})：${dustItem}`
       })
     )
     return textList.join('\n')
+  }
+
+  async getDustItem(targetWeekday) {
+    const obj = DUST_SCHEDULE.find((item) => {
+      return targetWeekday === item.wd
+    })
+    return obj.dustItem
   }
 
   async getDate(addDay) {
@@ -63,9 +57,9 @@ class MessageController {
   }
 
   // 曜日, 第N番目
-  async getWeekDay(date) {
+  async getWeekday(date) {
     // 曜日
-    const wd = weekdays[date.getDay()]
+    const wd = WEEKDAY_LIST[date.getDay()]
     // 第N番目
     const nth = String(Math.floor((date.getDate() + 6) / 7))
     return { nth, wd }
