@@ -1,4 +1,4 @@
-import { lineClient, DUST_REGEXP, DUST_SCHEDULE, WEEKDAY_LIST } from './config.js'
+import { lineClient, DUST_SCHEDULE, WEEKDAY_LIST, PERIOD, DUST_REGEXP, FIRST_THIRD_REGEXP } from './config.js'
 
 class MessageController {
   //
@@ -16,22 +16,22 @@ class MessageController {
     let response = { type: 'text', text: '申し訳ございません。入力内容に誤りがあります。' }
     // text
     if (event.message.type === 'text') {
-      const text = event.message.text
-      if (text.match(DUST_REGEXP)) response.text = await this.getDuxtInfo()
+      const getText = event.message.text
+      if (DUST_REGEXP.test(getText)) response.text = await this.getDustDate(PERIOD)
     }
     return response
   }
 
-  async getDuxtInfo() {
+  async getDustDate(period) {
     let textList = await Promise.all(
       // 7日分取得
-      [...Array(7)].map(async (_, n) => {
-        const { date, month, day } = await this.getDate(n)
-        let { nth, wd } = await this.getWeekday(date)
+      [...Array(period)].map(async (_, n) => {
+        let { month, day, wd, wdNth } = await this.getDate(n)
         // 第1,3火曜日の場合
-        wd = nth.match(/1|3/) && wd === '火' ? nth + wd : wd
+        if (FIRST_THIRD_REGEXP.test(wdNth) && wd === '火') wd = wdNth + wd
+        //
         const dustItem = await this.getDustItem(wd)
-        return `${month}/${day}(${wd})：${dustItem}`
+        return `${month}/${day}（${wd}）${dustItem}`
       })
     )
     return textList.join('\n')
@@ -52,17 +52,10 @@ class MessageController {
     // wanted info
     const month = date.getMonth() + 1
     const day = date.getDate()
-    const wdIndex = date.getDay()
-    return { date, month, day, wdIndex }
-  }
-
-  // 曜日, 第N番目
-  async getWeekday(date) {
-    // 曜日
-    const wd = WEEKDAY_LIST[date.getDay()]
-    // 第N番目
-    const nth = String(Math.floor((date.getDate() + 6) / 7))
-    return { nth, wd }
+    const wdIndex = date.getDay() // 曜日のindex
+    const wd = WEEKDAY_LIST[wdIndex] // 曜日
+    const wdNth = String(Math.floor((date.getDate() + 6) / 7)) // 曜日の第N番目
+    return { date, month, day, wd, wdNth }
   }
 
   // 第N週目
