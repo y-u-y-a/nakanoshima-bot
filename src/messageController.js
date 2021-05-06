@@ -5,11 +5,13 @@ class MessageController {
   async main(req, res) {
     const event = req.body.events[0]
     console.log(event)
-    // verify想定
-    if (!event) res.status(200).json({})
     // eventが存在する場合
-    const response = await this.getResponse(event)
-    lineClient.replyMessage(event.replyToken, response)
+    if (event) {
+      const response = await this.getResponse(event)
+      lineClient.replyMessage(event.replyToken, response)
+    }
+    // verify想定
+    res.status(200).json({})
   }
 
   async getResponse(event) {
@@ -49,19 +51,14 @@ class MessageController {
     const date = new Date()
     const today = date.getDate()
     date.setDate(today + addDay)
-    // wanted info
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    const wdIndex = date.getDay() // 曜日のindex
+    // target day info
+    const month = date.getMonth() + 1 // 月
+    const day = date.getDate() // 日
+    const wdIndex = date.getDay()
     const wd = WEEKDAY_LIST[wdIndex] // 曜日
-    const wdNth = String(Math.floor((date.getDate() + 6) / 7)) // 曜日の第N番目
-    return { date, month, day, wd, wdNth }
-  }
-
-  // 第N週目
-  async getNthWeek(date) {
-    const nth = String(Math.floor((date.getDate() - date.getDay() + 12) / 7))
-    return nth
+    const wdNth = String(Math.floor((day + 6) / 7)) // 曜日の第N番目
+    const weekNth = String(Math.floor((day - wdIndex + 12) / 7)) // 第N週目
+    return { date, month, day, wd, wdNth, weekNth }
   }
 }
 export default new MessageController()
