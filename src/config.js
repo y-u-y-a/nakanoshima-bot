@@ -2,8 +2,9 @@ import line from '@line/bot-sdk'
 import dotenv from 'dotenv'
 
 dotenv.config()
+export const PORT = process.env.PORT
 
-const PORT = process.env.PORT
+export const WEEKDAY_LIST = ['日', '月', '火', '水', '木', '金', '土']
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const lineChannel = {
@@ -11,29 +12,24 @@ const lineChannel = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
 }
 
-const lineClient = new line.Client(lineChannel)
+export const lineClient = new line.Client(lineChannel)
+
+export const lineMiddleware = () => line.middleware(lineChannel)
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-const WEEKDAY_LIST = ['日', '月', '火', '水', '木', '金', '土']
-
-const PERIOD = 7
-
-const DUST_SCHEDULE = [
-  { wd: '日', dustItem: 'なし' },
-  { wd: '月', dustItem: 'ミックスペーパー' },
-  { wd: '火', dustItem: 'プラスチック' },
-  { wd: '1火', dustItem: '小物金属・粗大ごみ' },
-  { wd: '3火', dustItem: '小物金属・粗大ごみ' },
-  { wd: '水', dustItem: '普通ごみ' },
-  { wd: '木', dustItem: 'なし' },
-  { wd: '金', dustItem: 'ビン/かん・PET・電池' },
-  { wd: '土', dustItem: '普通ごみ' },
-]
-
-const DUST_REGEXP = new RegExp(/ゴミ|ごみ/)
-
-const FIRST_THIRD_REGEXP = new RegExp(/1|3/)
-
-export { PORT, line, lineChannel, lineClient }
-export { WEEKDAY_LIST, PERIOD, DUST_SCHEDULE }
-export { DUST_REGEXP, FIRST_THIRD_REGEXP }
+export const garbageConf = {
+  responsePeriod: 7,
+  requestRegExp: new RegExp(/ゴミ|ごみ|収集/),
+  tuesdayRegExp: new RegExp(/1|3/),
+  schedule: [
+    { wd: '日', name: 'なし' },
+    { wd: '月', name: 'ミックスペーパー' },
+    { wd: '火', name: 'プラスチック' },
+    { wd: '1火', name: '小物金属・粗大ごみ' },
+    { wd: '3火', name: '小物金属・粗大ごみ' },
+    { wd: '水', name: '普通ごみ' },
+    { wd: '木', name: 'なし' },
+    { wd: '金', name: 'ビン/かん・PET・電池' },
+    { wd: '土', name: '普通ごみ' },
+  ],
+}
