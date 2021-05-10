@@ -9,6 +9,6 @@
     },
     "parserOptions": {
         "sourceType": "module", // commonJS → ES6
-        "ecmaVersion": 8 // ECMA2017, asyncでエラーが出るため
+        "ecmaVersion": 9 // ECMA2018, asyncでエラーが出るため, update 2017→2018 スプレッド演算子をサポートするため
     }
 }
