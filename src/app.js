@@ -8,8 +8,8 @@ const app = express()
 // Message API webhook
 app.post('/webhook', lineMiddleware(), async (req, res) => {
   try {
+    console.log(req.body.events)
     const event = req.body.events[0]
-    console.log(event)
     // eventが存在する場合
     if (event) {
       const response = await responseController.get(event)

@@ -29,7 +29,7 @@ export const garbageConf = {
     { wd: '3火', name: '小物金属・粗大ごみ' },
     { wd: '水', name: '普通ごみ' },
     { wd: '木', name: 'なし' },
-    { wd: '金', name: 'ビン/かん・PET・電池' },
+    { wd: '金', name: 'ビン,かん,PET,電池' },
     { wd: '土', name: '普通ごみ' },
   ],
 }
