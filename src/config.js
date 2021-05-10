@@ -17,6 +17,46 @@ export const lineClient = new line.Client(lineChannel)
 export const lineMiddleware = () => line.middleware(lineChannel)
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+const restaurantImageColumn = {
+  thumbnailImageUrl: 'https://example.com/bot/images/item1.jpg',
+  imageBackgroundColor: '#FFFFFF',
+  title: 'デリマハル',
+  text: 'カレーとナンを提供する食べログ評価3.7という高評価のお店。',
+  defaultAction: {
+    type: 'uri',
+    label: 'お店を確認する',
+    uri: 'http://example.com/page/123',
+  },
+  actions: [
+    {
+      type: 'uri',
+      label: 'お店を確認する',
+      uri: 'http://example.com/page/111',
+    },
+  ],
+}
+
+export const locationButtonTemplate = {
+  type: 'template',
+  altText: '飲食店を探すから位置情報を送ってね！',
+  template: {
+    type: 'buttons',
+    text: '飲食店を探すから位置情報を送ってね！',
+    actions: [{ type: 'location', label: '位置情報' }],
+  },
+}
+
+export const restaurantCarouselTemplate = {
+  type: 'template',
+  altText: 'レストラン一覧を受信しました。',
+  template: {
+    type: 'carousel',
+    imageAspectRatio: 'rectangle',
+    imageSize: 'cover',
+    columns: [restaurantImageColumn, restaurantImageColumn, restaurantImageColumn],
+  },
+}
+
 export const garbageConf = {
   responsePeriod: 7,
   requestRegExp: new RegExp(/ゴミ|ごみ|収集/),

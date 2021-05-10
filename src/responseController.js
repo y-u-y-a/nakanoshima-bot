@@ -1,36 +1,25 @@
-import { garbageConf } from './config.js'
+import { garbageConf, locationButtonTemplate, restaurantCarouselTemplate } from './config.js'
 import utils from './utils.js'
 
 class responseController {
   async get(event) {
     let response = { type: 'text', text: '申し訳ございません。入力内容に誤りがあります。' }
-
-    // Switch branch by request type.
     if (event.message.type === 'text') {
+      // 取得したテキストで条件分岐
       switch (true) {
-        /* ごみ|ゴミ|収集 */
-        case garbageConf.requestRegExp.test(event.message.text):
-          response.text = await this.getGarbageSchedule()
+        case /ゴミ|ごみ|収集/.test(event.message.text): {
+          response = { type: 'text', text: await this.getGarbageSchedule() }
           break
-        /* 駅 */
-        case /レストラン|飲食|食事/.test(event.message.text):
-          response = { type: 'template', altText: 'このデバイスでは使用できません。' }
-          response.template = {
-            type: 'buttons',
-            text: '飲食店を探すから位置情報を送ってね！',
-            actions: [{ type: 'location', label: '位置情報' }],
-          }
+        }
+        case /レストラン|飲食|食事/.test(event.message.text): {
+          response = locationButtonTemplate
           break
+        }
         default:
           break
       }
-      // location type.
     } else if (event.message.type === 'location') {
-      response.text = '位置情報をありがとう'
-      // Sticker is stamp.
-    } else if (event.message.type === 'sticker') {
-      const [packageId, stickerId] = [11538, 51626496] // sticker info
-      response = { type: 'sticker', packageId, stickerId }
+      response = restaurantCarouselTemplate
     }
     return response
   }
