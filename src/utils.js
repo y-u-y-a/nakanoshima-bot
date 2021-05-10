@@ -1,4 +1,4 @@
-import { WEEKDAY_LIST } from './config.js'
+import { WEEKDAY_LIST } from './config/index.js'
 
 export default {
   getDate(addDay) {

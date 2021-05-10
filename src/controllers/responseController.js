@@ -1,17 +1,20 @@
-import { garbageConf, locationButtonTemplate, restaurantCarouselTemplate } from './config.js'
-import utils from './utils.js'
+import { textRegExp, garbageConf } from '../config/index.js'
+import { defaultResponse, locationButtonTemplate, restaurantCarouselTemplate } from '../config/line.js'
+import utils from '../utils.js'
 
 class responseController {
   async get(event) {
-    let response = { type: 'text', text: '申し訳ございません。入力内容に誤りがあります。' }
+    let response = defaultResponse
     if (event.message.type === 'text') {
       // 取得したテキストで条件分岐
       switch (true) {
-        case /ゴミ|ごみ|収集/.test(event.message.text): {
+        // ゴミ収集日
+        case textRegExp.garbage.test(event.message.text): {
           response = { type: 'text', text: await this.getGarbageSchedule() }
           break
         }
-        case /レストラン|飲食|食事/.test(event.message.text): {
+        // レストラン
+        case textRegExp.restaurant.test(event.message.text): {
           response = locationButtonTemplate
           break
         }

@@ -1,12 +1,15 @@
 import express from 'express'
 
-import { PORT, lineMiddleware, lineClient } from './config.js'
-import responseController from './responseController.js'
+import { PORT } from './config/index.js'
+import { lineMiddleware, lineClient } from './config/line.js'
+import responseController from './controllers/responseController.js'
 
 const app = express()
 
+app.use(lineMiddleware())
+
 // Message API webhook
-app.post('/webhook', lineMiddleware(), async (req, res) => {
+app.post('/webhook', async (req, res) => {
   try {
     console.log(req.body.events)
     const event = req.body.events[0]
