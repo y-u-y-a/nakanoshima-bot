@@ -1,6 +1,6 @@
 import { textRegExp, garbageConf } from '../config/index.js'
-import { defaultResponse, locationButtonTemplate, restaurantCarouselTemplate } from '../config/line.js'
-import utils from '../utils.js'
+import { defaultResponse, locationButtonTemplate, restaurantCarouselTemplate } from '../line/index.js'
+import utils from '../utils/index.js'
 
 class responseController {
   async get(event) {
@@ -10,7 +10,8 @@ class responseController {
       switch (true) {
         // ゴミ収集日
         case textRegExp.garbage.test(event.message.text): {
-          response = { type: 'text', text: await this.getGarbageSchedule() }
+          const text = await this.getGarbageSchedule()
+          response = { type: 'text', text }
           break
         }
         // レストラン

@@ -3,6 +3,7 @@ import { lineClient } from '../line.js'
 import { imagePath, richMenuConfig } from './area.js'
 
 class RichMenu {
+  // 既存のリッチメニューを全て削除
   async init() {
     const list = await lineClient.getRichMenuList()
     console.log('init >>>>>', list)

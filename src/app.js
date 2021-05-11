@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { PORT } from './config/index.js'
-import { lineMiddleware, lineClient } from './config/line.js'
+import { lineMiddleware, lineClient } from './line/index.js'
 import responseController from './controllers/responseController.js'
 
 const app = express()
