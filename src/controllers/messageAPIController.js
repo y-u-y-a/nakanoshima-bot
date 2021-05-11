@@ -55,6 +55,10 @@ class MessageAPIController {
         const text = await garbageController.getSchedule()
         return { type: 'text', text }
       }
+      // カレンダー
+      case textRegExp.calender.test(getText): {
+        return defaultResponse
+      }
       // 暇かどうか
       case textRegExp.freeTime.test(getText): {
         baseTemplate.template = {

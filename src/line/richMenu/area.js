@@ -17,12 +17,12 @@ export const area4 = [
   // A
   {
     bounds: { x: x[0], y: y[0], width, height },
-    action: { type: 'message', text: 'ゴミ収集日' },
+    action: { type: 'message', text: 'ごみ収集日' },
   },
   // B
   {
     bounds: { x: x[1], y: y[0], width, height },
-    action: { type: 'message', text: '飲食店を探す' },
+    action: { type: 'message', text: 'カレンダー' },
   },
   // C
   {
@@ -43,4 +43,4 @@ export const richMenuConfig = {
   size: { width: maxWidth, height: maxHeight },
   areas: area4,
 }
-export const imagePath = './src/config/richMenu/images/area4.png'
+export const imagePath = './src/line/richMenu/images/area4.png'

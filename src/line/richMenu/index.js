@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { lineClient } from '../line.js'
+import { lineClient } from '../index.js'
 import { imagePath, richMenuConfig } from './area.js'
 
 class RichMenu {
