@@ -1,5 +1,7 @@
+import dotenv from 'dotenv'
 import line from '@line/bot-sdk'
 
+dotenv.config()
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const lineChannel = {
   channelSecret: process.env.CHANNEL_SECRET,

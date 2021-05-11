@@ -6,10 +6,8 @@ import responseController from './controllers/responseController.js'
 
 const app = express()
 
-app.use(lineMiddleware())
-
 // Message API webhook
-app.post('/webhook', async (req, res) => {
+app.post('/webhook', lineMiddleware(), async (req, res) => {
   try {
     console.log(req.body.events)
     const event = req.body.events[0]
