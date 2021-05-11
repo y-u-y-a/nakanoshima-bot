@@ -1,7 +1,7 @@
 import { WEEKDAY_LIST } from '../config/index.js'
 
 export default {
-  getDate(addDay) {
+  async getDate(addDay) {
     // today info
     const date = new Date()
     const today = date.getDate()
@@ -14,5 +14,11 @@ export default {
     const wdNth = String(Math.floor((day + 6) / 7)) // 曜日の第N番目
     const weekNth = String(Math.floor((day - wdIndex + 12) / 7)) // 第N週目
     return { date, month, day, wd, wdNth, weekNth }
+  },
+  // string to object
+  async paramsToObject(data) {
+    const parsedData = JSON.parse('{"' + decodeURI(data.replace(/&/g, '","').replace(/=/g, '":"')) + '"}')
+    console.log('parsedData >>>>>', parsedData)
+    return parsedData
   },
 }

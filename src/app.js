@@ -1,27 +1,14 @@
 import express from 'express'
 
 import { PORT } from './config/index.js'
-import { lineMiddleware, lineClient } from './line/index.js'
-import responseController from './controllers/responseController.js'
+import { lineMiddleware } from './line/index.js'
+import messageAPIController from './controllers/messageAPIController.js'
 
 const app = express()
 
-// Message API webhook
-app.post('/webhook', lineMiddleware(), async (req, res) => {
-  try {
-    console.log(req.body.events)
-    const event = req.body.events[0]
-    // eventが存在する場合
-    if (event) {
-      const response = await responseController.get(event)
-      lineClient.replyMessage(event.replyToken, response)
-    }
-    // verify想定
-    res.sendStatus(200)
-  } catch (err) {
-    console.log('catch error >>>>>\n', err)
-    res.sendStatus(500)
-  }
+// LINE Message API
+app.post('/webhook', lineMiddleware(), async (...args) => {
+  await messageAPIController.post(...args)
 })
 
 app.listen(PORT)

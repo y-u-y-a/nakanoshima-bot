@@ -4,7 +4,7 @@ export const WEEKDAY_LIST = ['日', '月', '火', '水', '木', '金', '土']
 
 export const textRegExp = {
   garbage: /ゴミ|ごみ|収集/,
-  restaurant: /レストラン|飲食|食事/,
+  freeTime: /レストラン|飲食|食事/,
 }
 
 export const garbageConf = {
