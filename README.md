@@ -2,13 +2,14 @@
 - type: module
 → for 'import' instead 'require'
 
-## Deploy flow
+## Heroku
 ```sh
+# init
 $ heroku git:remote -a nakanoshima-bot
-```
-### 環境変数確認
-```sh
+# Confirm env
 $ heroku config --app nakanoshima-bot
+# Confirm logs
+$ heroku logs --app nakanoshima-bot
 ```
 
 
