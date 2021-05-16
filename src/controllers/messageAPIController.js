@@ -38,6 +38,9 @@ class MessageAPIController {
   // Text Messageオブジェクト --------------------------
   async messageTextHandler(messageText) {
     switch (true) {
+      case regExp.test.test(messageText): {
+        return { type: 'text', text: 'Coming soon ...' }
+      }
       // ゴミ収集日
       case regExp.garbagesIndex.test(messageText): {
         return { type: 'text', text: await garbagesController.index() }

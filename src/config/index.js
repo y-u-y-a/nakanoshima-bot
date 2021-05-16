@@ -7,7 +7,7 @@ export const PORT = process.env.PORT
 export const WEEKDAY_LIST = ['日', '月', '火', '水', '木', '金', '土']
 
 export const regExp = {
-  test: 'テスト',
+  test: /テスト|サンプル/,
   garbagesIndex: /garbagesIndex|ごみ|ゴミ|収集日/,
   eventsIndex: /eventsIndex|イベント/,
   eventsCreate: /eventsCreate/,

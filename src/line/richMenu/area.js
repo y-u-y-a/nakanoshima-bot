@@ -32,7 +32,7 @@ export const area4 = [
   // D
   {
     bounds: { x: x[1], y: y[1], width, height },
-    action: { type: 'message', text: 'テスト' },
+    action: { type: 'message', text: 'サンプル' },
   },
 ]
 
