@@ -2,14 +2,14 @@ export const PORT = 3000
 
 export const WEEKDAY_LIST = ['日', '月', '火', '水', '木', '金', '土']
 
-export const textRegExp = {
-  garbage: /ゴミ|ごみ|収集/,
-  calender: /カレンダー/,
-  freeTime: /フリータイム/,
+export const regExp = {
+  test: 'テスト',
+  garbagesIndex: /garbagesIndex|ごみ|ゴミ|収集日/,
+  eventsIndex: /eventsIndex|イベント/,
+  eventsCreate: /eventsCreate/,
 }
 
 export const garbageConf = {
-  responsePeriod: 7,
   tuesdayRegExp: new RegExp(/1|3/),
   schedule: [
     { wd: '日', name: 'なし' },

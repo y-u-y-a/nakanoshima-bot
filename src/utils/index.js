@@ -16,7 +16,7 @@ export default {
     return { date, month, day, wd, wdNth, weekNth }
   },
   // string to object
-  async paramsToObject(data) {
+  async parseUrl(data) {
     const parsedData = JSON.parse('{"' + decodeURI(data.replace(/&/g, '","').replace(/=/g, '":"')) + '"}')
     console.log('parsedData >>>>>', parsedData)
     return parsedData

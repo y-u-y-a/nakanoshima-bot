@@ -1,18 +1,17 @@
 import { garbageConf } from '../config/index.js'
 import utils from '../utils/index.js'
 
-class GarbageController {
+class GarbagesController {
   constructor() {
-    this.responsePeriod = garbageConf.responsePeriod
     this.tuesdayRegExp = garbageConf.tuesdayRegExp
     this.schedule = garbageConf.schedule
   }
-  /* 収集日スケジュール取得 */
-  async getSchedule() {
+  /* 週間収集日スケジュール */
+  async index() {
     // 配列の並列処理(Arrayを引数に渡す必要があるのでmap関数を使用)
     let textList = await Promise.all(
       // 7日分取得
-      [...Array(this.responsePeriod)].map(async (_, n) => {
+      [...Array(7)].map(async (_, n) => {
         let { month, day, wd, wdNth } = await utils.getDate(n)
         // 第1,3火曜日の場合
         if (this.tuesdayRegExp.test(wdNth) && wd === '火') wd = wdNth + wd
@@ -21,7 +20,8 @@ class GarbageController {
         return `${month}/${day}（${wd}）${garbage.name}`
       })
     )
+    console.log(textList)
     return textList.join('\n')
   }
 }
-export default new GarbageController()
+export default new GarbagesController()

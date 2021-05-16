@@ -1,6 +1,7 @@
-import { textRegExp } from '../config/index.js'
+import { regExp } from '../config/index.js'
 import { lineClient, defaultResponse, baseTemplate } from '../line/index.js'
-import garbageController from './garbageController.js'
+import garbagesController from './garbagesController.js'
+import eventsController from './eventsController.js'
 
 class MessageAPIController {
   async post(req, res) {
@@ -12,23 +13,15 @@ class MessageAPIController {
       if (events.length > 0) {
         await Promise.all(
           events.map(async (event) => {
+            const eventType = event.type
             // Messageイベント
-            if (event.type === 'message') {
-              // Textメッセージ
-              if (event.message.type === 'text') {
-                response = await this.textMessageHandler(event.message.text)
-                // Locationメッセージ
-              } else if (event.message.type === 'location') {
-                response = await this.locationMessageHandler()
-              }
+            if (eventType === 'message') {
+              const messageType = event.message.type
+              if (messageType === 'text') response = await this.messageTextHandler(event.message.text)
+              else if (messageType === 'location') response = await this.messageLocationHandler()
               // Postbackイベント
-            } else if (event.type === 'postback') {
-              // アクションごとに条件分岐
-              if (event.postback.data === 'action=freeTime&flg=true') {
-                response = { type: 'text', text: '今のところ３人集まったよ！' }
-              } else if (event.postback.data === 'action=freeTime&flg=false') {
-                response = { type: 'text', text: '今のところ１人集まったよ！' }
-              }
+            } else if (eventType === 'postback') {
+              response = await this.postbackDataHandler(event.postback.data)
             }
             lineClient.replyMessage(event.replyToken, response)
           })
@@ -42,34 +35,24 @@ class MessageAPIController {
     }
   }
 
-  // PostbackEventオブジェクト -------------------------
-  async postbackEventHandler() {
-    return
-  }
-
   // Text Messageオブジェクト --------------------------
-  async textMessageHandler(getText) {
+  async messageTextHandler(messageText) {
     switch (true) {
       // ゴミ収集日
-      case textRegExp.garbage.test(getText): {
-        const text = await garbageController.getSchedule()
-        return { type: 'text', text }
+      case regExp.garbagesIndex.test(messageText): {
+        return { type: 'text', text: await garbagesController.index() }
       }
-      // カレンダー
-      case textRegExp.calender.test(getText): {
-        return defaultResponse
-      }
-      // 暇かどうか
-      case textRegExp.freeTime.test(getText): {
-        baseTemplate.template = {
+      // イベント
+      case regExp.eventsIndex.test(messageText): {
+        const template = {
           type: 'buttons',
-          text: '今日は？？',
+          text: 'アクションを選んでね！',
           actions: [
-            { type: 'postback', label: 'ひまー', data: 'action=freeTime&flg=true', displayText: 'ひまー' },
-            { type: 'postback', label: 'ひまじゃない', data: 'action=freeTime&flg=false', displayText: 'ひまじゃない' },
+            { type: 'postback', label: 'イベント一覧', data: 'eventsIndex', displayText: 'イベント一覧' },
+            { type: 'postback', label: 'イベント登録', data: 'eventsCreate', displayText: 'イベント登録' },
           ],
         }
-        return baseTemplate
+        return { ...baseTemplate, template }
       }
       default:
         return defaultResponse
@@ -77,8 +60,23 @@ class MessageAPIController {
   }
 
   // Location Messageオブジェクト ----------------------
-  async locationMessageHandler() {
+  async messageLocationHandler() {
     return { type: 'text', text: '申し訳ございません。入力内容に誤りがあります。' }
+  }
+
+  // PostbackEventオブジェクト -------------------------
+  async postbackDataHandler(postbackData) {
+    switch (true) {
+      // イベント
+      case regExp.eventsIndex.test(postbackData): {
+        return { type: 'text', text: await eventsController.index() }
+      }
+      case regExp.eventsCreate.test(postbackData): {
+        return { type: 'text', text: await eventsController.create() }
+      }
+      default:
+        defaultResponse
+    }
   }
 }
 export default new MessageAPIController()
