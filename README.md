@@ -6,6 +6,10 @@
 ```sh
 $ heroku git:remote -a nakanoshima-bot
 ```
+### 環境変数確認
+```sh
+$ heroku config --app nakanoshima-bot
+```
 
 
 ## リッチメニュー by Messaging API
