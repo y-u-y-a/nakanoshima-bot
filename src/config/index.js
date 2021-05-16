@@ -1,4 +1,8 @@
-export const PORT = 3000
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+export const PORT = process.env.PORT
 
 export const WEEKDAY_LIST = ['日', '月', '火', '水', '木', '金', '土']
 
