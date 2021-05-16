@@ -2,6 +2,11 @@
 - type: module
 → for 'import' instead 'require'
 
+## Deploy flow
+```sh
+$ heroku git:remote -a nakanoshima-bot
+```
+
 
 ## リッチメニュー by Messaging API
 ### 参考:
