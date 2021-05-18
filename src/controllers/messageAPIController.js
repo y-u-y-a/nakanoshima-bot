@@ -38,6 +38,9 @@ class MessageAPIController {
   // Text Messageオブジェクト --------------------------
   async messageTextHandler(messageText) {
     switch (true) {
+      case /かほっぺ/.test(messageText): {
+        return { type: 'text', text: 'こんにちは、かほっぺ！\n10月24日だよ！\n部屋番号は305だよ！' }
+      }
       case regExp.test.test(messageText): {
         return { type: 'text', text: 'Coming soon ...' }
       }
