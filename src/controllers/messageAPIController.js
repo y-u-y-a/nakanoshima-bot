@@ -78,17 +78,23 @@ class MessageAPIController {
 
   // PostbackEventオブジェクト -------------------------
   async postbackDataHandler(postbackData) {
-    switch (true) {
-      // イベント
-      case regExp.eventsIndex.test(postbackData): {
-        return { type: 'text', text: await eventsController.index() }
-      }
-      case regExp.eventsCreate.test(postbackData): {
-        return { type: 'text', text: await eventsController.create() }
-      }
-      default:
-        defaultResponse
+    // switch文の省略形
+    const switcher = {
+      eventsIndex: regExp.eventsIndex,
+      eventsCreate: regExp.eventsCreate,
     }
+    return switcher[postbackData] ? switcher[postbackData] : defaultResponse
+    // switch (true) {
+    //   // イベント
+    //   case regExp.eventsIndex.test(postbackData): {
+    //     return { type: 'text', text: await eventsController.index() }
+    //   }
+    //   case regExp.eventsCreate.test(postbackData): {
+    //     return { type: 'text', text: await eventsController.create() }
+    //   }
+    //   default:
+    //     defaultResponse
+    // }
   }
 }
 export default new MessageAPIController()
